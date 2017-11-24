@@ -50,3 +50,15 @@ The demo loads about 1000 placenames, each of them being a `L.DivIcon` with two 
 The demo includes data from Natural Earth, which is public domain. Please visit  http://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-populated-places/ for more information.
 
 In order to try the demo locally, just clone the repo, run `bower install` (if using the `gh-pages` branch, use `git clone --recursive` instead to pull the `rbush` submodule), and see the file `demo/demo.html`. You can choose to load more or less data by commenting/uncommenting the lines that include the natural earth data files.
+
+
+PS
+---
+
+做了一点针对我个人地图组件的调整
+
+主要是修改了聚合点显示逻辑，超出地图可视区域内的聚合点将不予显示
+
+以此来优化大量聚合点带来的性能问题
+
+不过依旧存在第一次加载大量点聚合卡顿的情况，还需进一步优化
