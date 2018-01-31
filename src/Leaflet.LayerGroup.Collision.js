@@ -55,12 +55,10 @@ function extensions(parentClass) { return {
 
     onAdd: function (map) {
         this._map = map;
-
-        for (var i in this._staticLayers) {
+        for (var i  = 0; i < this._staticLayers.length; i++) {
             map.addLayer(this._staticLayers[i]);
         }
 
-        this._onZoomEnd();
         this._onMoveEnd();
         map.on('zoomend', this._onZoomEnd, this);
         map.on('moveend', this._onMoveEnd, this);
@@ -76,25 +74,25 @@ function extensions(parentClass) { return {
     },
 
     _maybeAddLayerToRBush: function(layer) {
-
         var z    = this._map.getZoom();
         var bush = this._rbush;
-
-        var boxes = this._cachedRelativeBoxes[layer._leaflet_id];
+        var boxes2 = [[-14,-14,14,14],[-35,-10,35,11]];
+        //var boxes = this._cachedRelativeBoxes[layer._leaflet_id];
         var visible = false;
-        if (!boxes) {
-            // Add the layer to the map so it's instantiated on the DOM,
-            //   in order to fetch its position and size.
-            parentClass.prototype.addLayer.call(this, layer);
-            var visible = true;
-// 			var htmlElement = layer._icon;
-            var box = this._getIconBox(layer._icon);
-            boxes = this._getRelativeBoxes(layer._icon.children, box);
-            boxes.push(box);
-            this._cachedRelativeBoxes[layer._leaflet_id] = boxes;
-        }
-
-        boxes = this._positionBoxes(this._map.latLngToLayerPoint(layer.getLatLng()),boxes);
+        /*
+         if (!boxes) {
+         // Add the layer to the map so it's instantiated on the DOM,
+         //   in order to fetch its position and size.
+         parentClass.prototype.addLayer.call(this, layer);
+         var visible = true;
+         // 			var htmlElement = layer._icon;
+         var box = this._getIconBox(layer._icon);
+         boxes = this._getRelativeBoxes(layer._icon.children, box);
+         boxes.push(box);
+         this._cachedRelativeBoxes[layer._leaflet_id] = boxes;
+         }
+         */
+        var boxes = this._positionBoxes(this._map.latLngToLayerPoint(layer.getLatLng()),boxes2);
 
         var collision = false;
         for (var i=0; i<boxes.length && !collision; i++) {
@@ -198,7 +196,6 @@ function extensions(parentClass) { return {
     },
 
     _onZoomEnd: function() {
-
         for (var i=0; i<this._visibleLayers.length; i++) {
             parentClass.prototype.removeLayer.call(this, this._visibleLayers[i]);
         }
@@ -212,7 +209,6 @@ function extensions(parentClass) { return {
     },
 
     _onMoveEnd: function() {
-
         for (var i=0; i<this._visibleLayers.length; i++) {
             parentClass.prototype.removeLayer.call(this, this._visibleLayers[i]);
         }
